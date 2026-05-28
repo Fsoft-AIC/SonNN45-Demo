@@ -22,6 +22,5 @@ The source for each project can be found in the `projects/[project-name]` folder
 
 **Affiliations:** FPT Software AI Center, Vietnam · KAIST, South Korea · University of Alabama at Birmingham, USA
 
-[![CVPR 2026](https://img.shields.io/badge/CVPR-2026%20Findings-blue)](https://cvpr.thecvf.com/Conferences/2026)
-[![ArXiv](https://img.shields.io/badge/ArXiv-2603.14267-red)](https://arxiv.org/abs/2603.14267)
-[![Project Page](https://img.shields.io/badge/Project-Page-blue)](https://fsoft-aic.github.io/SonNN45-Demo/projects/diflowdubber/)
+<a href='https://cvpr.thecvf.com/Conferences/2026'><img src='https://img.shields.io/badge/CVPR-2026-blue'></a> <a href='https://openaccess.thecvf.com/content/CVPR2026F/html/Nguyen_DiFlowDubber_Discrete_Flow_Matching_for_Automated_Video_Dubbing_via_Cross-Modal_CVPRF_2026_paper.html'><img src='https://img.shields.io/badge/Paper-CVF-blue'></a> <a href='https://arxiv.org/abs/2603.14267'><img src='https://img.shields.io/badge/Paper-arXiv-b31b1b?logo=arxiv&logoColor=white'></a> <a href='https://fsoft-aic.github.io/SonNN45-Demo/projects/diflowdubber/'><img src='https://img.shields.io/badge/Demo-Page-blue'></a>
+</div>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>DiFlow-TTS</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/Highlight-Clean.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <meta property="og:site_name" content="DiFlow-TTS: Compact and Low-Latency Zero-Shot Text-to-Speech with Discrete Flow Matching">
+    <meta property="og:title" content="DiFlow-TTS: Compact and Low-Latency Zero-Shot Text-to-Speech with Discrete Flow Matching">
+    <meta property="og:description" content="DiFlow-TTS: Compact and Low-Latency Zero-Shot Text-to-Speech with Discrete Flow Matching">
+    <meta property="og:url" content="https://nngocson2002.github.io/projects/diflowtts">
+
+    <meta name="twitter:title" content="DiFlow-TTS: Compact and Low-Latency Zero-Shot Text-to-Speech with Discrete Flow Matching">
+    <meta name="twitter:description" content="DiFlow-TTS: Compact and Low-Latency Zero-Shot Text-to-Speech with Discrete Flow Matching">
+    <meta name="twitter:url" content="https://nngocson2002.github.io/projects/diflowtts">
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RK8Z1K8X2K');
+    </script>
+    <style type="text/css">
+    :root {
+        --bg: #FAF8F4;
+        --bg-elevated: #FFFFFF;
+        --bg-subtle: #F2EFE8;
+        --ink: #1A1814;
+        --ink-soft: #5A554C;
+        --ink-faint: #8E8678;
+        --hairline: #E4DFD4;
+        --hairline-strong: #C8C2B3;
+        --accent: oklch(.45 .08 250);
+        --accent-soft: oklch(.97 .015 250);
+        --accent-text: oklch(.35 .1 250);
+    }
+    body {
+        background-color: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", -apple-system, sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: "Newsreader", Georgia, serif;
+        color: var(--ink);
+        font-weight: 600;
+    }
+    p {
+        color: var(--ink-soft);
+        font-family: "Inter", -apple-system, sans-serif;
+    }
+    hr.divider {
+        border-top-color: var(--hairline);
+    }
+    .highlight-clean {
+        background-color: var(--bg);
+        color: var(--ink);
+    }
+    .btn {
+        color:black;
+        text-decoration:none;
+    }
+    .btn:hover {
+        color: black;
+        text-decoration:none;
+    }
+    * {box-sizing:border-box}
+
+    @media only screen and (max-width: 930px) {
+        .content { width:100% !important; }
+    }
+
+    /* Sliding underline for author links */
+    .author-link {
+        position: relative;
+        text-decoration: none;
+        color: var(--accent-text);
+    }
+    .author-link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 100%;
+        height: 2px;
+        background-color: currentColor;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.25s ease;
+    }
+    .author-link:hover::after {
+        transform: scaleX(1);
+    }
+    .author-link:hover {
+        text-decoration: none;
+    }
+
+    .venue-badge {
+        display: inline-block;
+        background: transparent;
+        color: var(--accent-text);
+        font-size: 25px;
+        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 4px;
+        border: none;
+        letter-spacing: 0.3px;
+    }
+
+    .figure-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+    .figure-hover:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.in-view {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .highlight-card {
+        border: 1px solid var(--hairline);
+        border-radius: 10px;
+        padding: 18px 20px;
+        background-color: var(--bg-subtle);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        height: 100%;
+        text-align: left;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .highlight-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+    }
+    .highlight-card .highlight-title {
+        font-weight: 700;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .highlight-card .highlight-icon {
+        display: inline-block;
+        font-size: 26px;
+        margin-right: 6px;
+        transition: transform 0.35s ease;
+    }
+    .highlight-card:hover .highlight-icon {
+        transform: scale(1.3) rotate(-8deg);
+    }
+    .highlight-card p {
+        margin-bottom: 0;
+        color: var(--ink-soft);
+        font-size: 0.92em;
+    }
+
+    .result-table th, .result-table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+    .result-table th.model-cell, .result-table td.model-cell {
+        text-align: left;
+    }
+    .result-table tr.ours-row td {
+        background-color: var(--accent-soft);
+    }
+
+    .result-table-wrap {
+        border: 1px solid var(--hairline);
+        border-radius: 12px;
+        overflow-x: auto;
+    }
+    .result-table-wrap table {
+        margin-bottom: 0;
+        border: 0;
+    }
+    .result-table-wrap table tr:last-child td {
+        border-bottom: 0;
+    }
+    .result-table tbody tr:not(.ours-row):hover td {
+        background-color: #f1f3f5;
+    }
+    .result-table tr.ours-row td {
+        transition: background-color 0.25s ease;
+    }
+    .result-table tr.ours-row:hover td {
+        background-color: #d9eaff;
+    }
+
+    .stat-card {
+        border-radius: 14px;
+        padding: 18px 10px;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+    }
+    .stat-card .stat-label {
+        font-weight: 700;
+        font-size: 0.95em;
+        order: 2;
+    }
+    .stat-card .stat-icon {
+        font-size: 24px;
+        order: 1;
+        display: inline-block;
+        transition: transform 0.35s ease;
+    }
+    .stat-card:hover .stat-icon {
+        transform: scale(1.3) rotate(-8deg);
+    }
+    .stat-card .stat-value {
+        font-size: 2em;
+        font-weight: 800;
+    }
+    .stat-card.c1 { background: #fdeee9; }
+    .stat-card.c1 .stat-label, .stat-card.c1 .stat-value { color: #d2562a; }
+    .stat-card.c2 { background: #eaf6ef; }
+    .stat-card.c2 .stat-label, .stat-card.c2 .stat-value { color: #2f8f5b; }
+    .stat-card.c3 { background: #eaf1fb; }
+    .stat-card.c3 .stat-label, .stat-card.c3 .stat-value { color: #2255c4; }
+    .stat-card.c4 { background: #f1eefc; }
+    .stat-card.c4 .stat-label, .stat-card.c4 .stat-value { color: #5b3fc9; }
+    </style>
+
+</head>
+
+<body>
+    <div class="highlight-clean" style="padding-top: 30px;padding-bottom:10px;">
+        <div class="container" style="max-width: 900px;">
+
+            <h1 class="text-center" style="font-weight: 750; font-size: 38px; margin-bottom: 8px;">
+                DiFlow-TTS
+            </h1>
+            <h2 class="text-center" style="font-weight: 600;">
+                Compact and Low-Latency Zero-Shot Text-to-Speech with Discrete Flow Matching
+            </h2>
+
+        </div>
+        <div style="text-align: center; margin: 12px 0;">
+            <span class="venue-badge">Interspeech 2026 (Long Paper Track)</span>
+        </div>
+
+        <div class="container" style="max-width: 1100px;font-size: 18px;text-align: center;white-space: nowrap;">
+
+            <a class="author-link" href="https://nngocson2002.github.io/">Ngoc-Son Nguyen<sup>1</sup></a>
+            &nbsp&nbsp
+            <a class="author-link" href="https://thanhtvt.github.io/">Thanh V. T. Tran<sup>1</sup></a>
+            &nbsp&nbsp
+            <a class="author-link" href="https://scholar.google.com/citations?user=sGFCHdcAAAAJ&hl=en">Hieu-Nghia Huynh-Nguyen<sup>1</sup></a>
+            &nbsp&nbsp
+            <a class="author-link" href="https://scholar.google.com/citations?user=JiKBo6UAAAAJ&hl=en">Truong-Son Hy<sup>2</sup></a>
+            &nbsp&nbsp
+            <a class="author-link" href="https://scholar.google.com/citations?user=rJe1704AAAAJ&hl=en">Van Nguyen<sup>1,&dagger;</sup></a>
+
+        </div>
+        <div class="container" style="max-width: 768px;text-align: center;">
+            1. <img src="./images/icon/fpt_logo.png" alt="FPT Software AI Center" style="max-height: 65px; max-width: 100%;">
+            &nbsp&nbsp&nbsp
+            2. <img src="./images/icon/uab_logo.png" alt="University of Alabama at Birmingham" style="max-height: 50px; max-width: 100%;">
+            <br>
+            <span style="font-size: 14px; color: var(--ink-faint);">&dagger; Corresponding author</span>
+        </div>
+
+        </div>
+        <div class="buttons" style="margin-bottom: 8px;">
+            <center>
+            <a class="btn btn-light" role="button" href="https://arxiv.org/abs/2509.09631">
+                <img src="./images/icon/arXiv.png" alt="arxiv" style="height:23px;">
+                Paper
+            </a>
+            <a class="btn btn-light" role="button" href="https://github.com/Fsoft-AIC/DiFlowTTS">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                Code
+            </a>
+            </center>
+        </div>
+
+    <hr class="divider" />
+
+    <div class="container" style="max-width: 768px; text-align:center;">
+        <div class="row" style="max-width: 768px;">
+            <div class="col-md-12">
+                <h2>💡 Abstract</h2>
+                <div class="reveal" style="border: 1px solid var(--hairline); border-radius: 10px; padding: 20px 28px; background-color: var(--bg-subtle); box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                    <p style="text-align: justify; margin-bottom: 0;">
+                        Zero-shot text-to-speech (TTS) has made significant progress in replicating unseen voices, yet balancing generation quality and inference efficiency remains challenging. Autoregressive models suffer from high latency, while diffusion-based approaches are constrained by training-time configurations. Moreover, most flow-based methods operate in continuous space, which introduces optimization challenges because continuous token spaces are inherently more complex than discrete ones. To address these limitations, we propose <strong>DiFlow-TTS</strong>, a novel zero-shot TTS framework based on discrete flow matching. The model consists of a deterministic Phoneme-Content Mapper for linguistic modeling and a Factorized Discrete Flow Denoiser that simultaneously generates prosody and acoustic token streams. Experimental results demonstrate the effectiveness of our approach across multiple evaluation metrics.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider" />
+    <div class="container" style="max-width: 768px; text-align:center;">
+        <h2>🔧 Method</h2>
+    </div>
+
+    <div class="container" style="max-width: 1200px; text-align:center; margin-top: 20px;">
+        <div class="row">
+            <div class="col-md-6 reveal" style="padding: 10px;">
+                <img src="./images/overall.png" alt="Overview of DiFlow-TTS" class="figure-hover" style="width: 80%;">
+                <p style="text-align: justify; margin-top: 10px; font-size: 0.9em; color: var(--ink-soft);">
+                    <strong>Figure 1:</strong> Overview of DiFlow-TTS. A Codec Encoder decomposes the speech prompt into a <strong>speaker embedding</strong>, prosody, and acoustic tokens for zero-shot style transfer, while the Phoneme-Content Mapper converts text into <strong>content tokens</strong> and content embeddings. Conditioned on the content embeddings and the speaker identity, prosody, and acoustic tokens extracted from the speech prompt, the Factorized Discrete Flow Denoiser simultaneously generates <strong>prosody and acoustic tokens</strong>. Finally, the generated tokens together with the speaker embedding are fed into the Codec Decoder to reconstruct the waveform.
+                </p>
+            </div>
+            <div class="col-md-6 reveal" style="padding: 10px; transition-delay: 0.15s;">
+                <img src="./images/architecture.png" alt="Detailed architecture of DiFlow-TTS" class="figure-hover" style="width: 100%;">
+                <p style="text-align: justify; margin-top: 10px; font-size: 0.9em; color: var(--ink-soft);">
+                    <strong>Figure 2:</strong> Detailed architecture of DiFlow-TTS. We formulate zero-shot TTS as token prediction over a factorized codec token space. Speech is tokenized by the <strong>(a)</strong> <em>Speech Tokenizer</em> into content, prosody, and acoustic tokens along with a speaker embedding. Built on these tokens, we design a framework comprising two main modules: <strong>(b)</strong> <em>Phoneme-Content Mapper</em>, which maps input phonemes to discrete content tokens and generates corresponding content embeddings; and <strong>(c)</strong> <em>Factorized Discrete Flow Denoiser</em>, which performs discrete flow matching conditioned on the speaker embedding, the discrete prosody and acoustic tokens derived from the speech prompt, and the content embeddings.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider" />
+    <div class="container" style="max-width: 768px; text-align:center;">
+        <h2>🎯 Challenges</h2>
+        <p style="max-width: 700px; margin: 0 auto 15px auto; color: var(--ink-soft);">
+            Existing zero-shot TTS paradigms each hit a different wall:
+        </p>
+    </div>
+    <div class="container" style="max-width: 1000px;">
+        <div class="row">
+            <div class="col-md-4 reveal" style="padding: 10px;">
+                <div class="highlight-card">
+                    <span class="highlight-title"><span class="highlight-icon">🐢</span>High-latency autoregressive generation</span>
+                    <p>Synthesizing tokens step-by-step makes inference inherently slow.</p>
+                </div>
+            </div>
+            <div class="col-md-4 reveal" style="padding: 10px; transition-delay: 0.15s;">
+                <div class="highlight-card">
+                    <span class="highlight-title"><span class="highlight-icon">⛓️</span>Diffusion ties training to sampling</span>
+                    <p>Tightly coupling the training and sampling processes restricts sampling configurations to those established during training.</p>
+                </div>
+            </div>
+            <div class="col-md-4 reveal" style="padding: 10px; transition-delay: 0.3s;">
+                <div class="highlight-card">
+                    <span class="highlight-title"><span class="highlight-icon">🌀</span>Continuous space complexity</span>
+                    <p>Operating over continuous, high-dimensional, unbounded representations complicates density estimation and invites out-of-distribution artifacts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider" />
+    <div class="container" style="max-width: 768px; text-align:center;">
+        <h2>✨ Quantitative Results</h2>
+    </div>
+    <div class="container" style="max-width: 1100px; margin-top: 10px;">
+        <h4 style="text-align:center; margin-bottom: 15px;">Performance on LibriSpeech test-clean</h4>
+        <div class="result-table-wrap reveal">
+        <table class="table table-bordered table-sm result-table" style="font-size: 0.85em;">
+            <thead>
+                <tr>
+                    <th class="model-cell">Model</th><th>Data (hrs)</th><th>UTMOS ↑</th><th>WER ↓</th><th>SIM-O ↑</th>
+                    <th>F0 Acc. ↑</th><th>F0 RMSE ↓</th><th>Energy Acc. ↑</th><th>Energy RMSE ↓</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="model-cell">Ground Truth</td><td>-</td><td>4.10</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+                <tr><td class="model-cell">VoiceCraft</td><td>GS (9K)</td><td>3.55</td><td>0.18</td><td>0.51</td><td>0.78</td><td>17.22</td><td>0.44</td><td>0.010</td></tr>
+                <tr><td class="model-cell">VALL-E</td><td>LT (500)</td><td>3.68</td><td>0.19</td><td>0.40</td><td>0.75</td><td>21.66</td><td>0.36</td><td>0.020</td></tr>
+                <tr><td class="model-cell">NaturalSpeech 2</td><td>LT (585)</td><td>2.38</td><td>0.09</td><td>0.31</td><td>0.80</td><td>15.62</td><td>0.25</td><td>0.020</td></tr>
+                <tr><td class="model-cell">F5-TTS</td><td>LT (500)</td><td>3.76</td><td>0.24</td><td>0.52</td><td>0.80</td><td>13.78</td><td>0.67</td><td>0.010</td></tr>
+                <tr><td class="model-cell">F5-TTS</td><td>E (100K)</td><td>3.72</td><td>0.09</td><td>0.66</td><td>0.83</td><td>12.66</td><td>0.66</td><td>0.010</td></tr>
+                <tr><td class="model-cell">OZSpeech</td><td>LT (500)</td><td>3.15</td><td><strong>0.05</strong></td><td>0.40</td><td>0.81</td><td>11.96</td><td>0.67</td><td>0.010</td></tr>
+                <tr><td class="model-cell">MaskGCT</td><td>E (100K)</td><td>3.83</td><td>0.09</td><td><strong>0.67</strong></td><td>0.77</td><td>14.33</td><td><strong>0.75</strong></td><td><strong>0.007</strong></td></tr>
+                <tr class="ours-row"><td class="model-cell"><strong>DiFlow-TTS (Ours)</strong></td><td>LT (470)</td><td><strong>3.98</strong></td><td><strong>0.05</strong></td><td>0.45</td><td><strong>0.88</strong></td><td><strong>7.97</strong></td><td>0.73</td><td><strong>0.007</strong></td></tr>
+            </tbody>
+        </table>
+        </div>
+        <p style="font-size:0.8em;color: var(--ink-faint);margin-top:8px;">Bold = best per column. Results use 3-second audio prompts; DiFlow-TTS is evaluated with 128 NFE and trained on only 470 hours — far less data than every baseline.</p>
+    </div>
+
+    <div class="container" style="max-width: 1100px; margin-top: 40px; margin-bottom: 20px;">
+        <h4 style="text-align:center; margin-bottom: 15px;">Model Size & Inference Latency</h4>
+        <div class="result-table-wrap reveal">
+        <table class="table table-bordered table-sm result-table" style="font-size: 0.85em;">
+            <thead>
+                <tr>
+                    <th class="model-cell">Model</th><th>#Params ↓</th><th>NFE</th><th>RTF ↓</th><th>UTMOS ↑</th><th>WER ↓</th><th>SIM-O ↑</th><th>F0 RMSE ↓</th><th>Energy RMSE ↓</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="model-cell">VoiceCraft</td><td>830M</td><td>-</td><td>1.70</td><td>3.55</td><td>0.18</td><td>0.51</td><td>17.22</td><td>0.010</td></tr>
+                <tr><td class="model-cell">VALL-E</td><td>594M</td><td>-</td><td>0.86</td><td>3.68</td><td>0.19</td><td>0.40</td><td>21.66</td><td>0.020</td></tr>
+                <tr><td class="model-cell">NaturalSpeech 2</td><td>378M</td><td>200</td><td>1.66</td><td>2.38</td><td>0.09</td><td>0.31</td><td>15.62</td><td>0.020</td></tr>
+                <tr><td class="model-cell">F5-TTS</td><td>336M</td><td>32</td><td>0.26</td><td>3.72</td><td>0.09</td><td>0.66</td><td>12.66</td><td>0.010</td></tr>
+                <tr><td class="model-cell">OZSpeech</td><td>145M</td><td>1</td><td><strong>0.03</strong></td><td>3.15</td><td>0.05</td><td>0.40</td><td>11.96</td><td>0.010</td></tr>
+                <tr><td class="model-cell">MaskGCT</td><td>1.43B</td><td>50+45*</td><td>0.46</td><td>3.83</td><td>0.09</td><td><strong>0.67</strong></td><td>14.33</td><td><strong>0.007</strong></td></tr>
+                <tr class="ours-row"><td class="model-cell" rowspan="2"><strong>DiFlow-TTS-Small (Ours)</strong></td><td rowspan="2"><strong>122M</strong></td><td>4</td><td><strong>0.03</strong></td><td>3.34</td><td>0.06</td><td>0.43</td><td>8.31</td><td><strong>0.007</strong></td></tr>
+                <tr class="ours-row"><td>16</td><td>0.05</td><td><strong>3.89</strong></td><td><strong>0.05</strong></td><td>0.45</td><td>8.58</td><td>0.008</td></tr>
+                <tr class="ours-row"><td class="model-cell" rowspan="2"><strong>DiFlow-TTS (Ours)</strong></td><td rowspan="2">164M</td><td>4</td><td><strong>0.03</strong></td><td>3.31</td><td><strong>0.05</strong></td><td>0.44</td><td>8.05</td><td><strong>0.007</strong></td></tr>
+                <tr class="ours-row"><td>16</td><td>0.07</td><td>3.86</td><td><strong>0.05</strong></td><td>0.45</td><td><strong>7.96</strong></td><td><strong>0.007</strong></td></tr>
+            </tbody>
+        </table>
+        </div>
+        <p style="font-size:0.8em;color: var(--ink-faint);margin-top:8px;">* MaskGCT is a two-stage system that first predicts masked semantic tokens, then infers masked acoustic tokens. Bold = best per column. DiFlow-TTS-Small is up to 11.7× smaller than MaskGCT and up to 34× faster than VoiceCraft at comparable or better quality.</p>
+    </div>
+
+    <div class="container" style="max-width: 1100px; margin-top: 40px;">
+        <div class="row">
+            <div class="col-md-3 col-6 reveal" style="padding: 10px;">
+                <div class="stat-card c1">
+                    <span class="stat-label">Best Naturalness</span>
+                    <span class="stat-icon">🏆</span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 reveal" style="padding: 10px; transition-delay: 0.1s;">
+                <div class="stat-card c2">
+                    <span class="stat-label">Best Content Accuracy</span>
+                    <span class="stat-icon">🛡️</span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 reveal" style="padding: 10px; transition-delay: 0.2s;">
+                <div class="stat-card c3">
+                    <span class="stat-label">Strong Prosody Accuracy</span>
+                    <span class="stat-icon">🥇</span>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 reveal" style="padding: 10px; transition-delay: 0.3s;">
+                <div class="stat-card c4">
+                    <span class="stat-label">Data Efficiency</span>
+                    <span class="stat-icon">📊</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider" />
+    <div class="container reveal" style="max-width: 768px; text-align:center;">
+        <h2>🔊 Qualitative Results</h2>
+        <p style="color: var(--ink-soft); font-size: 1.1em;">We will update soon!</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var revealEls = document.querySelectorAll('.reveal');
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            revealEls.forEach(function(el) { observer.observe(el); });
+        });
+    </script>
+
+</body>
+
+</html>

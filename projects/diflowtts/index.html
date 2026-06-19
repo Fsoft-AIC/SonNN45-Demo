@@ -534,6 +534,58 @@
         </div>
     </div>
 
+    <div class="container" style="max-width: 1000px; text-align:center; margin-top: 30px;">
+        <h4 style="text-align:center; margin-bottom: 15px;">Celebrities</h4>
+    </div>
+    <div class="container" style="max-width: 1000px; margin-top: 10px;">
+        <div class="result-table-wrap reveal">
+        <table class="table table-bordered table-sm result-table" style="font-size: 0.85em;">
+            <thead>
+                <tr>
+                    <th>Celebrity</th>
+                    <th class="model-cell" style="min-width:320px;">Transcription</th>
+                    <th>Prompt</th>
+                    <th>Synthesized Speech</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Elon Musk</td>
+                    <td class="model-cell">When something is important enough, you do it even if the odds are not in your favor.</td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/prompt/elon.wav"></audio></td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/synth/elon_synth.wav"></audio></td>
+                </tr>
+                <tr>
+                    <td>Jensen Huang</td>
+                    <td class="model-cell">Technology has transformed the way we communicate with each other around the world.</td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/prompt/jensen.wav"></audio></td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/synth/jensen_synth.wav"></audio></td>
+                </tr>
+                <tr>
+                    <td>Mark Zuckerberg</td>
+                    <td class="model-cell">Artificial intelligence is transforming industries across the globe at an unprecedented pace.</td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/prompt/zuck.wav"></audio></td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/synth/zuck_synth.wav"></audio></td>
+                </tr>
+                <tr>
+                    <td>Donald Trump</td>
+                    <td class="model-cell">The weather outside is bright and clear, perfect for a walk in the park.</td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/prompt/trump.wav"></audio></td>
+                    <td><audio controls style="width:170px;" src="./audios/celebrities/synth/trump_synth.wav"></audio></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <div class="container reveal" style="max-width: 1000px; margin-top: 25px;">
+        <div style="border: 1px solid var(--hairline); border-radius: 10px; padding: 14px 20px; background-color: var(--bg-subtle);">
+            <p style="margin-bottom: 0; font-size: 0.85em; color: var(--ink-soft); text-align: left;">
+                <strong>⚠️ Disclaimer:</strong> The audio samples provided above are for academic purposes only and are intended to demonstrate technical capabilities.
+            </p>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var revealEls = document.querySelectorAll('.reveal');

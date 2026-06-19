@@ -1,0 +1,4 @@
+elon|elon_synth|When something is important enough, you do it even if the odds are not in your favor.
+jensen|jensen_synth|Technology has transformed the way we communicate with each other around the world.
+zuck|zuck_synth|Artificial intelligence is transforming industries across the globe at an unprecedented pace.
+trump|trump_synth|The weather outside is bright and clear, perfect for a walk in the park.
